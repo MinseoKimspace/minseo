@@ -25,7 +25,7 @@ function Overlay({ posts }) {
 
           {resumeItem && resumeItem.file && (
             <a 
-              href={`${resumeItem.file.asset.url}?dl=`} 
+              href={`${resumeItem.file.url}?dl=`} 
               target="_blank"
               style={{
                 background: 'white', color: 'black', padding: '10px 20px', 
@@ -72,7 +72,7 @@ function Overlay({ posts }) {
             <h3 style={{ margin: '0 0 5px 0' }}>{post.title}</h3>
             <p style={{ fontSize: '14px', color: '#ccc', margin: '0 0 10px 0' }}>{post.description}</p>
             {post.file && (
-              <a href={`${post.file.asset.url}?dl=`} target="_blank" style={{ color: '#4dabf7', textDecoration: 'none', fontSize: '13px' }}>
+              <a href={`${post.file.url}?dl=`} target="_blank" style={{ color: '#4dabf7', textDecoration: 'none', fontSize: '13px' }}>
                 📎 PDF Download
               </a>
             )}

@@ -10,7 +10,12 @@ export default {
       title: 'Category',
       type: 'string',
       options: {
-        list: [ { title: 'Project', value: 'project' }, { title: 'Paper', value: 'paper' } ],
+        list: [
+          { title: 'Project', value: 'project' },
+          { title: 'Paper', value: 'paper' },
+          { title: 'Study Note', value: 'study note' },
+          { title: 'Resume', value: 'resume' },
+        ],
         layout: 'radio'
       }
     },

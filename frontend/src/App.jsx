@@ -5,7 +5,8 @@ import { client, urlFor } from './sanity'
 
 function Overlay({ posts }) {
   const [filter, setFilter] = useState(null)
-  
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+
   const resumeItem = posts.find(p => p.category === 'resume')
 
   const filtered = !filter 
@@ -14,47 +15,85 @@ function Overlay({ posts }) {
         .filter(p => p.category !== 'resume') 
         .filter(p => filter === 'all' ? true : p.category === filter)
 
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   return (
-    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', padding: '40px', pointerEvents: 'none', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', padding: isMobile ? '20px' : '40px', pointerEvents: 'none', display: 'flex', flexDirection: 'column' }}>
       
-      {resumeItem && resumeItem.file && (
+      {!isMobile && resumeItem && resumeItem.file && (
         <a 
           href={`${resumeItem.file.url}?dl=`} target="_blank"
           style={{
             position: 'absolute', 
-            top: '40px', right: '40px',
+            top: '40px',
+            right: '40px',
             pointerEvents: 'auto',
             background: 'white', color: 'black', padding: '10px 24px', borderRadius: '30px', 
             textDecoration: 'none', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px',
-            boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.3)', transition: 'transform 0.2s',
             zIndex: 1000
           }}
+          onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+          onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
         >
           📄 Resume
         </a>
       )}
 
-      <header style={{ pointerEvents: 'auto', marginBottom: '20px', color: 'white', maxWidth: '800px', flexShrink: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '25px', marginBottom: '30px' }}>
+      <header style={{ 
+        pointerEvents: 'auto', marginBottom: '20px', color: 'white', 
+        maxWidth: '800px', flexShrink: 0, position: 'relative'
+      }}>
+        
+        <div style={{ 
+          display: 'flex', 
+          flexDirection: isMobile ? 'column' : 'row', 
+          alignItems: isMobile ? 'flex-start' : 'center', 
+          gap: '25px', marginBottom: '30px' 
+        }}>
+          
           <img 
             src="/profile.jpg" 
             alt="Profile" 
             onError={(e) => {e.target.style.display='none'}} 
             style={{ 
-              width: '90px', height: '90px', borderRadius: '50%', objectFit: 'cover', 
+              width: isMobile ? '80px' : '90px', height: isMobile ? '80px' : '90px', 
+              borderRadius: '50%', objectFit: 'cover', flexShrink: 0,
               border: '2px solid rgba(255,255,255,0.8)', boxShadow: '0 0 20px rgba(255,255,255,0.3)'
             }} 
           />
+          
           <div>
-            <h1 style={{ margin: '0 0 8px 0', fontSize: '2.2rem', fontWeight: '800', lineHeight: '1.1' }}>Minseo Kim</h1>
-            <p style={{ margin: '0 0 5px 0', fontSize: '1.1rem', fontWeight: '600', color: '#e0e0e0' }}>Graphics AI Researcher @ Georgia Tech</p>
-            <p style={{ margin: '0', fontSize: '0.95rem', opacity: 0.7, lineHeight: '1.5' }}>
-              Interested in Modern Computer Graphics and AI.
+            <h1 style={{ margin: '0 0 8px 0', fontSize: isMobile ? '1.8rem' : '2.2rem', fontWeight: '800', lineHeight: '1.1' }}>
+              Minseo Kim
+            </h1>
+            <p style={{ margin: '0 0 5px 0', fontSize: isMobile ? '1rem' : '1.1rem', fontWeight: '600', color: '#e0e0e0' }}>
+              Graphics AI Researcher
             </p>
+            <p style={{ margin: '0', fontSize: '0.95rem', opacity: 0.7, lineHeight: '1.5' }}>
+              Interested in Computer Graphics and AI.
+            </p>
+            
+            {isMobile && resumeItem && resumeItem.file && (
+              <a 
+                href={`${resumeItem.file.url}?dl=`} target="_blank"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '8px',
+                  background: 'white', color: 'black', padding: '8px 20px', borderRadius: '30px', 
+                  textDecoration: 'none', fontWeight: 'bold', marginTop: '15px', fontSize: '0.9rem'
+                }}
+              >
+                📄 Resume
+              </a>
+            )}
           </div>
         </div>
         
-        <div style={{ display: 'flex', gap: '10px' }}>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}> 
           {['all', 'project', 'paper', 'study note'].map(type => (
             <button 
               key={type} 
@@ -67,22 +106,17 @@ function Overlay({ posts }) {
                 backdropFilter: 'blur(5px)', transition: 'all 0.3s ease'
               }}
             >
-              {type.toUpperCase()}
+              {type === 'study note' ? 'STUDY NOTE' : type.toUpperCase()}
             </button>
           ))}
         </div>
       </header>
 
       <div style={{ 
-        display: 'flex',          
-        flexDirection: 'column',  
-        gap: '15px',              
-        overflowY: 'auto',        
-        paddingRight: '10px',
-        pointerEvents: 'auto',
-        maxHeight: 'calc(100vh - 280px)', 
-        width: '100%',            
-        maxWidth: '700px',
+        display: 'flex', flexDirection: 'column', gap: '15px',              
+        overflowY: 'auto', paddingRight: '10px', pointerEvents: 'auto',
+        maxHeight: isMobile ? 'calc(100vh - 350px)' : 'calc(100vh - 280px)', 
+        width: '100%', maxWidth: '700px',
       }}>
         
         {filter && filtered.length === 0 && (
@@ -97,18 +131,22 @@ function Overlay({ posts }) {
             padding: '20px', borderRadius: '12px', 
             color: 'white', border: '1px solid rgba(255,255,255,0.08)',
             display: 'flex', 
-            gap: '20px',
-            alignItems: 'start',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.2)',
-            transition: 'transform 0.2s',
+            flexDirection: isMobile ? 'column' : 'row',
+            gap: '20px', alignItems: 'start',
+            boxShadow: '0 4px 10px rgba(0,0,0,0.2)', transition: 'transform 0.2s',
           }}>
             {post.mainImage && (
-              <div style={{ flexShrink: 0, width: '140px', height: '100px', borderRadius: '8px', overflow: 'hidden', background: '#333' }}>
-                <img src={urlFor(post.mainImage).width(300).url()} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <div style={{ 
+                flexShrink: 0, 
+                width: isMobile ? '100%' : '140px',
+                height: isMobile ? '160px' : '100px', 
+                borderRadius: '8px', overflow: 'hidden', background: '#333' 
+              }}>
+                <img src={urlFor(post.mainImage).width(400).url()} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
             )}
             
-            <div style={{ flexGrow: 1 }}>
+            <div style={{ flexGrow: 1, width: '100%' }}>
               <h3 style={{ margin: '0 0 6px 0', fontSize: '1.2rem', fontWeight: 'bold' }}>{post.title}</h3>
               <p style={{ fontSize: '0.9rem', color: '#ccc', margin: '0 0 12px 0', lineHeight: '1.4', whiteSpace: 'pre-line' }}>
                 {post.description}

@@ -62,7 +62,7 @@ function Overlay({ posts }) {
       <div style={modalOverlayStyle}>
         <div style={{ ...modalContentStyle, maxWidth: '800px' }}> 
           <div style={modalHeaderStyle}>
-            <button onClick={() => setFilter(null)} style={backBtnStyle}> Close</button>
+            <button onClick={() => setFilter(null)} style={backBtnStyle}>Close</button>
             <div style={{ fontSize: '0.9rem', color: '#aaa', fontWeight: 'bold' }}>ABOUT ME</div>
           </div>
 
@@ -110,7 +110,7 @@ function Overlay({ posts }) {
           <p style={{ color: 'white', margin: '5px 0 0 0', fontSize: '1.1rem', opacity: 0.7 }}>Graphics AI Researcher</p>
         </div>
         
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}> 
           <button onClick={() => setFilter('bio')} style={menuBtnStyle(filter === 'bio')}>
             BIO
           </button>

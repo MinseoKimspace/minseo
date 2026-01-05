@@ -1,4 +1,4 @@
-// schemaTypes/portfolio.js
+// backend/schemaTypes/portfolio.js
 export default {
   name: 'portfolio',
   title: 'Portfolio Item',
@@ -14,7 +14,7 @@ export default {
           { title: 'Project', value: 'project' },
           { title: 'Paper', value: 'paper' },
           { title: 'Study Note', value: 'study note' },
-          { title: 'Resume', value: 'resume' },
+          { title: 'Bio', value: 'bio' }, 
         ],
         layout: 'radio'
       }
